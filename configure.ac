@@ -3,11 +3,11 @@
 
 AC_PREREQ([2.69])
 AC_INIT([gcode_analyze], [0.0.1], [m.hartman@lpfrg.com])
-
+AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE
 
 AC_CONFIG_SRCDIR([src/defs.h])
-AC_CONFIG_HEADERS([config.h])
+#AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
@@ -33,9 +33,9 @@ AC_FUNC_REALLOC
 AC_CHECK_FUNCS([    memset sqrt fabsf fseek ftell fgets strlen getopt_long puts printf strchr strstr])
 
 AC_CONFIG_FILES([
-            config.h
             Makefile
             src/Makefile
             test/Makefile
 ])
+AC_CONFIG_SUBDIRS([src/jansson])
 AC_OUTPUT
