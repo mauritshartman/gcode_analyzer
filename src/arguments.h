@@ -11,11 +11,14 @@ extern "C" {
 
 #include <defs.h>
 
+#include <jansson.h>
+
 typedef enum {JSON, XML} output_options_type;
 
 typedef struct {
     char *filename;
     output_options_type output;
+    json_t *profile;
 } gcode_options;
 
 

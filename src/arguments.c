@@ -1,7 +1,5 @@
 #include <arguments.h>
 
-#include <jansson.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
@@ -33,9 +31,12 @@ static void print_help(void)
 }
 
 
+/* Parse a given JSON file with printer profiles
+ * http://docs.octoprint.org/en/master/api/printerprofiles.html#profile
+ */
 static void parse_profile(gcode_options *options, const char *profile_fname)
 {
-    json_t *root;
+    json_t *root, *data, *name;
     json_error_t error;
     FILE *profile_file = fopen(profile_fname, "r");
 
@@ -47,18 +48,28 @@ static void parse_profile(gcode_options *options, const char *profile_fname)
     root = json_loadf(profile_file, 0, &error);     // No flags passed - default behavior
     if (!root) {
         fprintf(stderr, "Parsing error in printer profile file: on line %d: %s\n", error.line, error.text);
+        exit(EXIT_FAILURE);
     }
     fclose(profile_file);
+    options->profile = root;
 
+    // Display basic profile information:
+    name = json_object_get(root, "name");
+    if (json_is_string(name)) {
+        printf("Successfully parsed printer profile '%s'\n", json_string_value(name));
+    }
 }
 
 
+/* Default options */
 static void set_option_defaults(gcode_options *options)
 {
     options->output = JSON;
+    options->profile = NULL;
 }
 
 
+/* Parse all given commandline options: */
 void parse_options(gcode_options *options, int argc, char *argv[])
 {
     int c, option_index;
