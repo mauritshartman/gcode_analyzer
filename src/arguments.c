@@ -1,5 +1,7 @@
 #include <arguments.h>
 
+#include <jansson.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
@@ -8,6 +10,7 @@
 
 static struct option long_options[] =
 {
+    {"profile",      required_argument,  0,  'p'},
     {"file",        required_argument,  0,  'f'},
     {"version",     no_argument,        0,  'v'},
     {"help",        no_argument,        0,  'h'},
@@ -21,11 +24,32 @@ static void print_help(void)
     char *helpstring = 
     "Usage: gcode_analyze [options]\n"
     "Options:\n"
+    "  -p, --profile            Configuration file with profile settings.\n"
     "  -f, --file               GCode file to process.\n"
     "  -h, --help               This help message.\n"
     "  -o, --output             Output format (JSON, XML)\n"
     "  -v, -?, --version        Version information.\n";
     printf(helpstring);
+}
+
+
+static void parse_profile(gcode_options *options, const char *profile_fname)
+{
+    json_t *root;
+    json_error_t error;
+    FILE *profile_file = fopen(profile_fname, "r");
+
+    // Try to read and parse the JSON printer profile file:
+    if (!profile_file) {
+        fprintf(stderr,"Unable to open printer profile file %s\n", profile_fname);
+        exit(EXIT_FAILURE);
+    }
+    root = json_loadf(profile_file, 0, &error);     // No flags passed - default behavior
+    if (!root) {
+        fprintf(stderr, "Parsing error in printer profile file: on line %d: %s\n", error.line, error.text);
+    }
+    fclose(profile_file);
+
 }
 
 
@@ -43,10 +67,13 @@ void parse_options(gcode_options *options, int argc, char *argv[])
 
     while (true) {
         option_index = 0;
-        c = getopt_long(argc, argv, "f:ho:v?", long_options, &option_index);
+        c = getopt_long(argc, argv, "p:f:ho:v?", long_options, &option_index);
         if (c == -1) { break; }
 
         switch (c) {
+            case 'p':
+                parse_profile(options, optarg);
+                break;
             case 'f':
                 options->filename = optarg;
                 break;

@@ -3,7 +3,7 @@ SUBDIRS = jansson
 
 # Flags to pass to C compiler, pre-processor and linker:
 AM_CFLAGS = --pedantic -Wall -std=c99 -O2
-AM_CPPFLAGS = -I$(srcdir)/jansson
+AM_CPPFLAGS = -I$(srcdir)/jansson/src
 AM_LDFLAGS = -lm
 
 # this lists the binaries to produce, the (non-PHONY, binary) targets in

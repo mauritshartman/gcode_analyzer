@@ -7,11 +7,16 @@ AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE
 
 AC_CONFIG_SRCDIR([src/defs.h])
-#AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
+
 AC_PROG_LIBTOOL
+LT_CONFIG_LTDL_DIR([libltdl])
+LTDL_INIT
+AC_CONFIG_MACRO_DIRS([libltdl/m4])
+
 
 # Checks for libraries.
 
@@ -32,10 +37,6 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([    memset sqrt fabsf fseek ftell fgets strlen getopt_long puts printf strchr strstr])
 
-AC_CONFIG_FILES([
-            Makefile
-            src/Makefile
-            test/Makefile
-])
+AC_CONFIG_FILES([Makefile src/Makefile test/Makefile])
 AC_CONFIG_SUBDIRS([src/jansson])
 AC_OUTPUT

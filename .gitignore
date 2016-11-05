@@ -3,17 +3,16 @@
 *.gco
 
 # http://www.gnu.org/software/automake
-
 Makefile.in
 Makefile
 
 # http://www.gnu.org/software/autoconf
-
-autom4te.cache
+autom4te.cache/
 autoscan.log
 autoscan-*.log
 aclocal.m4
 compile
+config.h
 config.h.in
 config.guess
 config.log
@@ -24,6 +23,9 @@ configure.scan
 depcomp
 ltmain.sh
 libtool
+libltdl/
+.deps/
+.libs/
 install-sh
 missing
 stamp-h1
