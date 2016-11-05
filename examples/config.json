@@ -1,0 +1,38 @@
+{
+    "id": "1234dummy",
+    "name": "test profile",
+    "color": "default",
+    "model": "test model",
+    "default": true,
+    "current": true,
+    "resource": "http://dummy",
+    "volume": {
+        "formFactor": "rectangular",
+        "width": 500,
+        "depth": 500,
+        "height": 500
+    },
+    "heatedBed": true,
+    "axes": {
+        "x": {
+            "speed": 10,
+            "inverted": false
+        },
+        "y": {
+            "speed": 10,
+            "inverted": false
+        },
+        "z": {
+            "speed": 10,
+            "inverted": false
+        }
+    },
+    "extruder": {
+        "nozzleDiameter": 0.35,
+        "count": 2,
+        "offsets": [
+            [0.0, 0.0],
+            [20.0, 25.0]
+        ]
+    }
+}
