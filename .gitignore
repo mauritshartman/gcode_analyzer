@@ -31,6 +31,7 @@ stamp-h1
 
 # Prerequisites
 *.d
+*.Po
 
 # Object files
 *.o
