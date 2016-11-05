@@ -61,7 +61,7 @@ typedef struct {
 Gcode *gcode_init(void);
 Vector3D *gcode_dimensions(Gcode *);
 print_area *gcode_printing_area(Gcode *);
-void gcode_load(Gcode *, char *filename); 		// Add profile
+void gcode_load(Gcode *, const char *filename); 		// Add profile
 
 
 #ifdef  __cplusplus

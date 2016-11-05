@@ -2,6 +2,7 @@
 #include <vector.h>
 #include <gcode.h>
 #include <arguments.h>
+#include <output.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,19 +10,17 @@
 
 int main(int argc, char* argv[])
 {
-    char buf[512];
     gcode_options options;
+    Gcode *g;
 
     parse_options(&options, argc, argv);
 
-    Vector3D *v = vector3D_init(1, 2, 3);
-    printf("The vector is %s\n", vector3D_str(v, buf, sizeof(buf)));
-
-    Gcode *g = gcode_init();
+    // Try to load the Gcode file:
+    g = gcode_init();
     gcode_load(g, options.filename);
+    printf("File loaded and its size is %ld bytes, %ld lines\n", g->fileSize, g->filePos);
 
-    printf("Loaded file and its size is %ld bytes, %ld lines\n", g->fileSize, g->filePos);
-
+    show_output(g, &options);
 
     return EXIT_SUCCESS;
 }

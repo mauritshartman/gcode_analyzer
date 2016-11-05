@@ -11,8 +11,11 @@ extern "C" {
 
 #include <defs.h>
 
+typedef enum {JSON, XML} output_options_type;
+
 typedef struct {
     char *filename;
+    output_options_type output;
 } gcode_options;
 
 

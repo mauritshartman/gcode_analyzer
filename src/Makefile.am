@@ -1,5 +1,5 @@
 # what flags you want to pass to the C compiler & linker
-AM_CFLAGS = --pedantic -Wall -std=c99 -O2 -mfloat-abi=hard
+AM_CFLAGS = --pedantic -Wall -std=c99 -O2
 AM_LDFLAGS = -lm
 
 # this lists the binaries to produce, the (non-PHONY, binary) targets in
@@ -13,4 +13,6 @@ gcode_analyze_SOURCES =     main.c \
                             list.c list.h \
                             dict.c dict.h \
                             gcode.c gcode.h \
-                            minmax.c minmax.h
+                            minmax.c minmax.h \
+                            output.c output.h \
+                            util.c util.h
