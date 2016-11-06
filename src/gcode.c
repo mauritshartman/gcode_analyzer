@@ -87,6 +87,24 @@ static void parse_gcode_comment(Gcode *g, const char *line)
 }
 
 
+static void parse_G(Gcode *g, char *line)
+{
+
+}
+
+
+static void parse_M(Gcode *g, char *line)
+{
+
+}
+
+
+static void parse_T(Gcode *g, char *line)
+{
+
+}
+
+
 // Parse a single line of gcode:
 static void parse_line(Gcode *g, char *line)
 {
@@ -101,8 +119,20 @@ static void parse_line(Gcode *g, char *line)
         line2 = strtok(line, ";");      // Continue with the line before the start of the comment
     }
 
-  
-
+    // Parse different gcode types:
+    switch (line2[0]) {
+        case 'G':
+            parse_G(g, line2);
+            break;
+        case 'M':
+            parse_M(g, line2);
+            break;
+        case 'T':
+            parse_T(g, line2);
+            break;
+        default:
+            break;
+    }
 }
 
 
