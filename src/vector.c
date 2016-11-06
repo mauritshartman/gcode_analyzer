@@ -72,12 +72,12 @@ Vector3D *vector3D_sub(Vector3D *a, Vector3D *b)
 }
 
 
-/* Multiply vectors a and b, and return pointer to a: */
-Vector3D *vector3D_mul(Vector3D *a, Vector3D *b)
+/* Scalar multiplication of a vector */
+Vector3D *vector3D_mul(Vector3D *a, float s)
 {
-    a->x *= b->x;
-    a->y *= b->y;
-    a->z *= b->z;
+    a->x *= s;
+    a->y *= s;
+    a->z *= s;
     return a;
 }
 

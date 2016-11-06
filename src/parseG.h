@@ -12,7 +12,7 @@ extern "C" {
 #include <gcode.h>
 
 
-void parse_G(Gcode *g, char *line);
+void parse_G(Gcode *g, const int, const char *line);
 
 
 #ifdef  __cplusplus

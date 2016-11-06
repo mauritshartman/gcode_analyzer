@@ -93,30 +93,30 @@ static void parse_gcode_comment(Gcode *g, const char *line)
 // Parse a single line of gcode:
 static void parse_line(Gcode *g, char *line)
 {
-    char *line2 = line;
+    char cmd_letter;
+    int cmd_number, scanned;
 
     g->filePos++;
     g->readBytes += strlen(line);
 
-    // Parse gcode comments:
-    if (strchr(line, ';') != NULL) {
-        parse_gcode_comment(g, line);
-        line2 = strtok(line, ";");      // Continue with the line before the start of the comment
-    }
-
-    // Parse different gcode types:
-    switch (line2[0]) {
-        case 'G':
-            parse_G(g, line2);
-            break;
-        case 'M':
-            parse_M(g, line2);
-            break;
-        case 'T':
-            parse_T(g, line2);
-            break;
-        default:
-            break;
+    if ((scanned = sscanf(line, "%c%d", &cmd_letter, &cmd_number)) != EOF) {
+        switch (cmd_letter) {
+            case 'G':
+                parse_G(g, cmd_number, line);
+                break;
+            case 'M':
+                parse_M(g, cmd_number, line);
+                break;
+            case 'T':
+                parse_T(g, cmd_number, line);
+                break;
+                /* Unclear whether comment lines need to start with a semicolon, or if whitespace is allowed first. If not, then the following is more efficient: */
+            case ';':
+                parse_gcode_comment(g, line);
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -124,6 +124,7 @@ static void parse_line(Gcode *g, char *line)
 void gcode_load(Gcode *g, const char *filename)
 {
     char line[128];
+    memset (line, '\0', sizeof(line));
 
     open_file_and_determine_size(g, filename);
     

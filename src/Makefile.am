@@ -2,7 +2,7 @@
 SUBDIRS = jansson
 
 # Flags to pass to C compiler, pre-processor and linker:
-AM_CFLAGS = --pedantic -Wall -std=c99 -O2
+AM_CFLAGS = --pedantic -Wall -std=c99 -O0 -pg
 AM_CPPFLAGS = -I$(srcdir)/jansson/src
 AM_LDFLAGS = -lm
 

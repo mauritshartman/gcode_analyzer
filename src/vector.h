@@ -28,7 +28,7 @@ Vector3D *vector3D_init2(void);
 Vector3D *vector3D_copy(Vector3D *);
 Vector3D *vector3D_add(Vector3D *, Vector3D *);
 Vector3D *vector3D_sub(Vector3D *, Vector3D *);
-Vector3D *vector3D_mul(Vector3D *, Vector3D *);
+Vector3D *vector3D_mul(Vector3D *, float);
 Vector3D *vector3D_abs(Vector3D *);
 bool vector3D_eq(Vector3D *, Vector3D *);
 float vector3D_length(Vector3D *);
