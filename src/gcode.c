@@ -1,5 +1,8 @@
 #include <gcode.h>
 #include <util.h>
+#include <parseG.h>
+#include <parseM.h>
+#include <parseT.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -84,24 +87,6 @@ static void parse_gcode_comment(Gcode *g, const char *line)
     }
 
     // TODO CURA profiles not parsed now
-}
-
-
-static void parse_G(Gcode *g, char *line)
-{
-
-}
-
-
-static void parse_M(Gcode *g, char *line)
-{
-
-}
-
-
-static void parse_T(Gcode *g, char *line)
-{
-
 }
 
 

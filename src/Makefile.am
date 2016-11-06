@@ -19,6 +19,9 @@ libgcode_analyze_la_SOURCES =   defs.h \
                                 gcode.c gcode.h \
                                 minmax.c minmax.h \
                                 output.c output.h \
+                                parseG.c parseG.h \
+                                parseM.c parseM.h \
+                                parseT.c parseT.h \
                                 util.c util.h
 libgcode_analyze_la_LIBADD =    jansson/src/libjansson.la
 
