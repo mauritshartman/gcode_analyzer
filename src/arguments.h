@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 #include <defs.h>
+#include <vector.h>
 
 #include <jansson.h>
 
@@ -19,6 +20,9 @@ typedef struct {
     char *filename;
     output_options_type output;
     json_t *profile;
+
+    float feedrate;
+    Vector3D *offsets[2];       // TODO: max 2 extruders?
 } gcode_options;
 
 

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <string.h>
+#include <math.h>
 
 
 static struct option long_options[] =
@@ -31,12 +32,83 @@ static void print_help(void)
 }
 
 
+/* Determine the feedrate from the JSON profile */
+static void parse_profile_feedrate(gcode_options *options)
+{
+    float fr_x, fr_y;
+    bool fr_x_found = false, fr_y_found = false;
+    json_t *axes, *axis, *speed;
+
+    if ((axes = json_object_get(options->profile, "axes")) != NULL) {     // Axes object is specified
+        // Retrieve x axis speed:
+        if ((axis = json_object_get(axes, "x")) != NULL) {
+            if ((speed = json_object_get(axis, "speed")) != NULL) {
+                fr_x = json_real_value(speed);
+                fr_x_found = true;
+            }
+        }
+        
+        // Retrieve y axis speed:
+        if ((axis = json_object_get(axes, "y")) != NULL) {
+            if ((speed = json_object_get(axis, "speed")) != NULL) {
+                fr_y = json_real_value(speed);
+                fr_y_found = true;
+            }
+        }
+    }
+
+    if (fr_x_found && fr_y_found) {
+        options->feedrate = fminf(fr_x, fr_y);
+        printf("Parsed X and Y feedrates\n");
+    }
+    else if (fr_x_found && !fr_y_found) {
+        options->feedrate = fr_x;
+        printf("Parsed X feedrate\n");
+    }
+    else if (!fr_x_found && fr_y_found) {
+        options->feedrate = fr_y;
+        printf("Parsed X feedrate\n");
+    }
+}
+
+
+/* */
+static void parse_profile_offsets(gcode_options *options)
+{
+    json_t *extruder, *offset_array, *offset, *val1, *val2;
+    char buf[64];
+    uint16 i;
+
+    if ((extruder = json_object_get(options->profile, "extruder")) != NULL) {
+        if ((offset_array = json_object_get(extruder, "offsets")) != NULL) {
+            if (json_is_array(offset_array)) {
+                // Fetch the offset for the two extruders:
+                for (i = 0; i < 2; i++) {
+                    if ((offset = json_array_get(offset_array, i)) != NULL) {  // Should be an X, Y tuple
+                        val1 = json_array_get(offset, 0);
+                        val2 = json_array_get(offset, 1);
+                        if (val1 != NULL && val2 != NULL) {
+                            options->offsets[i] = vector3D_init(
+                                (float)json_real_value(val1),
+                                (float)json_real_value(val2),
+                                0.0);
+                            printf("Parsed extruder %d offsets: %s\n", i, vector3D_str(options->offsets[i], buf, sizeof(buf)));
+                        }
+                        else { return; }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 /* Parse a given JSON file with printer profiles
  * http://docs.octoprint.org/en/master/api/printerprofiles.html#profile
  */
 static void parse_profile(gcode_options *options, const char *profile_fname)
 {
-    json_t *root, *data, *name;
+    json_t *root, *name;
     json_error_t error;
     FILE *profile_file = fopen(profile_fname, "r");
 
@@ -53,10 +125,14 @@ static void parse_profile(gcode_options *options, const char *profile_fname)
     fclose(profile_file);
     options->profile = root;
 
+    // Parse feedrate and offsets:
+    parse_profile_feedrate(options);
+    parse_profile_offsets(options);
+
     // Display basic profile information:
     name = json_object_get(root, "name");
     if (json_is_string(name)) {
-        printf("Successfully parsed printer profile '%s'\n", json_string_value(name));
+        printf("Parsed printer profile '%s'\n", json_string_value(name));
     }
 }
 
@@ -66,6 +142,9 @@ static void set_option_defaults(gcode_options *options)
 {
     options->output = JSON;
     options->profile = NULL;
+    options->feedrate = 2000;       // some somewhat sane default if axes speeds are insane...
+    options->offsets[0] = NULL;
+    options->offsets[1] = NULL; 
 }
 
 

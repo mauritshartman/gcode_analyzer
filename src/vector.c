@@ -109,6 +109,6 @@ float vector3D_length(Vector3D *a)
 /* Clear the given buffer, check it for length, and fill it with a string representation of the given vector a: */
 char *vector3D_str(Vector3D *a, char *buf, uint16 len)
 {
-    snprintf(buf, len, "Vector3D(x=%f, y=%f, z=%f, length=%f)", a->x, a->y, a->z, vector3D_length(a));
+    snprintf(buf, len, "Vector3D(x=%.3f, y=%.3f, z=%.3f, length=%.3f)", a->x, a->y, a->z, vector3D_length(a));
     return buf;
 }
