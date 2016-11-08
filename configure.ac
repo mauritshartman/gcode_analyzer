@@ -35,7 +35,7 @@ AC_TYPE_LONG_LONG_INT
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([    memset sqrt fabsf fseek ftell fgets strlen getopt_long puts printf strchr strstr fminf])
+AC_CHECK_FUNCS([    memset sqrtf fabsf fseek ftell fgets strlen getopt_long puts printf strchr strstr fminf])
 
 AC_CONFIG_FILES([Makefile src/Makefile test/Makefile])
 AC_CONFIG_SUBDIRS([src/jansson])

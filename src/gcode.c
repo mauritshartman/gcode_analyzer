@@ -22,6 +22,7 @@ Gcode *gcode_init(void)
     g->scale = 1.0;
     g->posAbs = true;
     g->filamentDiameter = 0.0;
+    g->currentExtruder = 0;
 
     g->feedrate = 2000; /* feedrate = min(printer_profile["axes"]["x"]["speed"], printer_profile["axes"]["y"]["speed"]) */
 

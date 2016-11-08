@@ -102,7 +102,7 @@ bool vector3D_eq(Vector3D *a, Vector3D *b)
 /* Return the length of the given vector: */
 float vector3D_length(Vector3D *a)
 {
-    return sqrt(a->x * a->x + a->y * a->y + a->z * a->z);
+    return sqrtf(a->x * a->x + a->y * a->y + a->z * a->z);
 }
 
 

@@ -11,6 +11,9 @@ MinMax3D *minmax3D_init(void)
     MinMax3D *m = malloc(sizeof(MinMax3D));
     memset(m, '\0', sizeof(MinMax3D));
 
+    m->min = vector3D_init(0.0, 0.0, 0.0);  // TODO: check?
+    m->max = vector3D_init(0.0, 0.0, 0.0);
+
     return m;
 }
 
