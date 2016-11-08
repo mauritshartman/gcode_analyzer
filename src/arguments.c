@@ -40,6 +40,7 @@ static void parse_profile_feedrate(gcode_options *options)
     bool fr_x_found = false, fr_y_found = false;
     json_t *axes, *axis, *speed;
 
+    options->feedrate_set = false;
     if ((axes = json_object_get(options->profile, "axes")) != NULL) {     // Axes object is specified
         // Retrieve x axis speed:
         if ((axis = json_object_get(axes, "x")) != NULL) {
@@ -60,12 +61,15 @@ static void parse_profile_feedrate(gcode_options *options)
 
     if (fr_x_found && fr_y_found) {
         options->feedrate = fminf(fr_x, fr_y);
+        options->feedrate_set = true;
     }
     else if (fr_x_found && !fr_y_found) {
         options->feedrate = fr_x;
+        options->feedrate_set = true;
     }
     else if (!fr_x_found && fr_y_found) {
         options->feedrate = fr_y;
+        options->feedrate_set = true;
     }
 }
 

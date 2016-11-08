@@ -133,6 +133,9 @@ void gcode_load(Gcode *g)
     gettimeofday(g->parse_start, NULL);
     open_file_and_determine_size(g);
     
+    // If feedrate is set in the profile, use it:
+    if (g->options->feedrate_set) { g->feedrate = g->options->feedrate; }
+
     // Parse all the lines in the gcode file:
     while (fgets(line, sizeof(line), g->file) != NULL) {
         parse_line(g, line);

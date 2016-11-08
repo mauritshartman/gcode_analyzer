@@ -22,6 +22,7 @@ typedef struct {
     json_t *profile;
 
     float feedrate;
+    bool feedrate_set;
     Vector3D *offsets[2];       // TODO: max 2 extruders?
     ubyte offsets_set;          // Number of offsets parsed from profile
 } gcode_options;
