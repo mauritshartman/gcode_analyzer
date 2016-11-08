@@ -16,8 +16,8 @@ Gcode *gcode_init(void)
 
     g->minMax = minmax3D_init();
     g->abort = false;
-    g->pos = vector3D_init(0, 0, 0);
-    g->posOffset = vector3D_init(0, 0, 0);
+    g->pos = vector3D_init(0.0, 0.0, 0.0);
+    g->posOffset = vector3D_init(0.0, 0.0, 0.0);
     g->absoluteE = true;
     g->scale = 1.0;
     g->posAbs = true;

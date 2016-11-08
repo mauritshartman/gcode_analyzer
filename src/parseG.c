@@ -65,7 +65,31 @@ static void inline parse_G0_G1(Gcode *g, const char *line)
 
 static void inline parse_G4(Gcode *g, const char *line)
 {
+    float s = 0.0, p = 0.0;
+    if (parse_code_float('S', line, &s)) { g->totalMoveTimeMinute += (s / 60.0); }      // Seconds
+    if (parse_code_float('P', line, &p)) { g->totalMoveTimeMinute += (s / 60000.0); }   // Milliseconds
+}
 
+
+static void inline parse_G28(Gcode *g, const char *line)
+{
+    float x = 0.0, y = 0.0, z = 0.0;
+    bool x_found, y_found, z_found;             // Will be initialized in the next lines
+
+    x_found = parse_code_float('X', line, &x);
+    y_found = parse_code_float('Y', line, &y);
+    z_found = parse_code_float('Z', line, &z);
+
+    if (!x_found && !y_found && !z_found) {     // No homing coordinates given
+        g->pos.x = 0.0;
+        g->pos.y = 0.0;
+        g->pos.z = 0.0;
+    }
+    else {  // Take the given homing coordinates:
+        if (x_found) { g->pos.x = x; }
+        if (y_found) { g->pos.y = y; }
+        if (z_found) { g->pos.z = z; }
+    }
 }
 
 
@@ -78,17 +102,15 @@ void parse_G(Gcode *g, const int cmd, const char *line)
         case 4:     // Delay
             parse_G4(g, line); break;
         case 10:    // Retract
-            break;
+            g->totalMoveTimeMinute += g->fwretractTime; break;
         case 11:    // Unretract
-            break;
+            g->totalMoveTimeMinute += g->fwrecoverTime; break;
         case 20:    // Units in inches
-            g->scale = 2.51;
-            break;
+            g->scale = 2.51; break;
         case 21:    // Units in mm
-            g->scale = 1.0;
-            break;
+            g->scale = 1.0; break;
         case 28:    // Home
-            break;
+            parse_G28(g, line); break;
         case 90:    // Absolute position
             g->posAbs = true;
             break;
