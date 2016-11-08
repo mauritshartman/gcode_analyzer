@@ -81,15 +81,26 @@ static void inline parse_G28(Gcode *g, const char *line)
     z_found = parse_code_float('Z', line, &z);
 
     if (!x_found && !y_found && !z_found) {     // No homing coordinates given
-        g->pos.x = 0.0;
-        g->pos.y = 0.0;
-        g->pos.z = 0.0;
+        g->pos->x = 0.0;
+        g->pos->y = 0.0;
+        g->pos->z = 0.0;
     }
     else {  // Take the given homing coordinates:
-        if (x_found) { g->pos.x = x; }
-        if (y_found) { g->pos.y = y; }
-        if (z_found) { g->pos.z = z; }
+        if (x_found) { g->pos->x = x; }
+        if (y_found) { g->pos->y = y; }
+        if (z_found) { g->pos->z = z; }
     }
+}
+
+
+static void inline parse_G92(Gcode *g, const char *line)
+{
+    float x = 0.0, y = 0.0, z = 0.0, e = 0.0;
+
+    if (parse_code_float('X', line, &x)) { g->posOffset->x = g->pos->x - x; }
+    if (parse_code_float('Y', line, &y)) { g->posOffset->y = g->pos->y - y; }
+    if (parse_code_float('Z', line, &z)) { g->posOffset->z = g->pos->z - z; }
+    if (parse_code_float('E', line, &e)) { g->currentE[g->currentExtruder] = e; }
 }
 
 
@@ -118,7 +129,7 @@ void parse_G(Gcode *g, const int cmd, const char *line)
             g->posAbs = false;
             break;
         case 92:    // Set absolution position point
-            break;
+            parse_G92(g, line); break;
         default:
             // Silently ignore other gcode G-commands:
             break;
