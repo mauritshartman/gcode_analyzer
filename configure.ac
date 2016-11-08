@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([gcode_analyze], [0.0.1], [m.hartman@lpfrg.com])
+AC_INIT([gcode_analyze], [0.0.2], [m.hartman@lpfrg.com])
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE
 
