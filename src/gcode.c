@@ -14,6 +14,9 @@ Gcode *gcode_init(void)
     Gcode *g = malloc(sizeof(Gcode));
     memset(g, '\0', sizeof(Gcode));
 
+    g->parse_start = malloc(sizeof(struct timeval));
+    g->parse_stop = malloc(sizeof(struct timeval));
+
     g->minMax = minmax3D_init();
     g->abort = false;
     g->pos = vector3D_init(0.0, 0.0, 0.0);
@@ -126,7 +129,8 @@ void gcode_load(Gcode *g)
 {
     char line[128];
     memset (line, '\0', sizeof(line));  // Probably not necessary as fgets overwrites this, including '\0'
-
+    
+    gettimeofday(g->parse_start, NULL);
     open_file_and_determine_size(g);
     
     // Parse all the lines in the gcode file:
@@ -135,4 +139,14 @@ void gcode_load(Gcode *g)
     }
 
     fclose(g->file);
+    gettimeofday(g->parse_stop, NULL);
+}
+
+
+void gcode_free(Gcode *g)
+{
+    free(g->parse_start);
+    free(g->parse_stop);
+    free(g->options);
+    free(g);
 }

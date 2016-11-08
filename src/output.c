@@ -4,10 +4,11 @@
 
 
 static void output_json(Gcode *g) {
-    puts("{");
+    unsigned long long int t;
 
-
-    puts("}");
+    t = 1000 * (g->parse_stop->tv_sec - g->parse_start->tv_sec) + (g->parse_stop->tv_usec - g->parse_start->tv_usec) / 1000;
+    printf("G-code file loaded (%ld Kbytes, %ld lines) in %.3f seconds (%.3f lines / second)\n",
+        g->fileSize / 1000, g->filePos, ((double)t / 1000.0), ((double)g->filePos / ((double)t / 1000.0)));
 }
 
 

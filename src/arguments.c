@@ -60,15 +60,12 @@ static void parse_profile_feedrate(gcode_options *options)
 
     if (fr_x_found && fr_y_found) {
         options->feedrate = fminf(fr_x, fr_y);
-        printf("Parsed X and Y feedrates\n");
     }
     else if (fr_x_found && !fr_y_found) {
         options->feedrate = fr_x;
-        printf("Parsed X feedrate\n");
     }
     else if (!fr_x_found && fr_y_found) {
         options->feedrate = fr_y;
-        printf("Parsed X feedrate\n");
     }
 }
 
@@ -77,7 +74,6 @@ static void parse_profile_feedrate(gcode_options *options)
 static void parse_profile_offsets(gcode_options *options)
 {
     json_t *extruder, *offset_array, *offset, *val1, *val2;
-    char buf[64];
     uint16 i;
 
     if ((extruder = json_object_get(options->profile, "extruder")) != NULL) {
@@ -89,11 +85,7 @@ static void parse_profile_offsets(gcode_options *options)
                         val1 = json_array_get(offset, 0);
                         val2 = json_array_get(offset, 1);
                         if (val1 != NULL && val2 != NULL) {
-                            options->offsets[i] = vector3D_init(
-                                (float)json_real_value(val1),
-                                (float)json_real_value(val2),
-                                0.0);
-                            printf("Parsed extruder %d offsets: %s\n", i, vector3D_str(options->offsets[i], buf, sizeof(buf)));
+                            options->offsets[i] = vector3D_init((float)json_real_value(val1), (float)json_real_value(val2), 0.0);
                         }
                         else { return; }
                     }

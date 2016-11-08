@@ -14,6 +14,7 @@ extern "C" {
 #include <arguments.h>
 
 #include <stdio.h>
+#include <sys/time.h>
 
 /* Specific GCODE analyze types and functions */
 typedef struct {
@@ -47,6 +48,8 @@ typedef struct {
 	float feedrate;
 	
 	gcode_options *options;
+	struct timeval *parse_start;
+	struct timeval *parse_stop;
 } Gcode;
 
 typedef struct {
@@ -63,6 +66,7 @@ Gcode *gcode_init(void);
 Vector3D *gcode_dimensions(Gcode *);
 print_area *gcode_printing_area(Gcode *);
 void gcode_load(Gcode *); 		// Add profile
+void gcode_free(Gcode *);
 
 
 #ifdef  __cplusplus
