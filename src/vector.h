@@ -11,6 +11,8 @@ extern "C" {
 
 #include <defs.h>
 
+#include <jansson.h>
+
 /* Specific GCODE analyze types and functions */
 typedef struct {
     float x;
@@ -33,10 +35,7 @@ Vector3D *vector3D_abs(Vector3D *);
 bool vector3D_eq(Vector3D *, Vector3D *);
 float vector3D_length(Vector3D *);
 char *vector3D_str(Vector3D *, char *, uint16);
-
-
-
-/* GCODE definitions */
+json_t *json_vector3D(Vector3D *);
 
 
 #ifdef  __cplusplus

@@ -112,3 +112,15 @@ char *vector3D_str(Vector3D *a, char *buf, uint16 len)
     snprintf(buf, len, "Vector3D(x=%.3f, y=%.3f, z=%.3f, length=%.3f)", a->x, a->y, a->z, vector3D_length(a));
     return buf;
 }
+
+
+// Create a json object object out of a vector
+json_t *json_vector3D(Vector3D *v)
+{
+    json_t *ret;
+    ret = json_object();
+    json_object_set(ret, "x", json_real(v->x));
+    json_object_set(ret, "y", json_real(v->y));
+    json_object_set(ret, "z", json_real(v->z));
+    return ret;
+}
