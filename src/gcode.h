@@ -11,7 +11,7 @@ extern "C" {
 
 #include <vector.h>
 #include <minmax.h>
-#include <dict.h>
+#include <arguments.h>
 
 #include <stdio.h>
 
@@ -46,6 +46,7 @@ typedef struct {
 
 	float feedrate;
 	
+	gcode_options *options;
 } Gcode;
 
 typedef struct {
@@ -61,7 +62,7 @@ typedef struct {
 Gcode *gcode_init(void);
 Vector3D *gcode_dimensions(Gcode *);
 print_area *gcode_printing_area(Gcode *);
-void gcode_load(Gcode *, const char *filename); 		// Add profile
+void gcode_load(Gcode *); 		// Add profile
 
 
 #ifdef  __cplusplus

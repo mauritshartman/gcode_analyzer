@@ -16,12 +16,12 @@ static void output_xml(Gcode *g) {
 }
 
 
-void show_output(Gcode *g, gcode_options *options)
+void show_output(Gcode *g)
 {
-    if (options->output == JSON) {
+    if (g->options->output == JSON) {
         output_json(g);
     }
-    else if (options->output == XML) {
+    else if (g->options->output == XML) {
         output_xml(g);
     }
 }

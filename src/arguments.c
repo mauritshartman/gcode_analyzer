@@ -5,6 +5,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <math.h>
+#include <string.h>
 
 
 static struct option long_options[] =
@@ -97,6 +98,7 @@ static void parse_profile_offsets(gcode_options *options)
                         else { return; }
                     }
                 }
+                options->offsets_set = i;
             }
         }
     }
@@ -108,7 +110,7 @@ static void parse_profile_offsets(gcode_options *options)
  */
 static void parse_profile(gcode_options *options, const char *profile_fname)
 {
-    json_t *root, *name;
+    json_t *root;
     json_error_t error;
     FILE *profile_file = fopen(profile_fname, "r");
 
@@ -128,12 +130,6 @@ static void parse_profile(gcode_options *options, const char *profile_fname)
     // Parse feedrate and offsets:
     parse_profile_feedrate(options);
     parse_profile_offsets(options);
-
-    // Display basic profile information:
-    name = json_object_get(root, "name");
-    if (json_is_string(name)) {
-        printf("Parsed printer profile '%s'\n", json_string_value(name));
-    }
 }
 
 
@@ -144,17 +140,23 @@ static void set_option_defaults(gcode_options *options)
     options->profile = NULL;
     options->feedrate = 2000;       // some somewhat sane default if axes speeds are insane...
     options->offsets[0] = NULL;
-    options->offsets[1] = NULL; 
+    options->offsets[1] = NULL;
+    options->offsets_set = 0;
 }
 
 
 /* Parse all given commandline options: */
-void parse_options(gcode_options *options, int argc, char *argv[])
+gcode_options *parse_options(int argc, char *argv[])
 {
     int c, option_index;
+    gcode_options *options;
 
+    // Allocate, clear and set default options:
+    options = malloc(sizeof(gcode_options));
+    memset(options, '\0', sizeof(gcode_options));
     set_option_defaults(options);
 
+    // Parse command line:
     while (true) {
         option_index = 0;
         c = getopt_long(argc, argv, "p:f:ho:v?", long_options, &option_index);
@@ -175,13 +177,15 @@ void parse_options(gcode_options *options, int argc, char *argv[])
                 else if (!strcmp(optarg, "XML")) { options->output = XML; }
                 else {
                     fprintf(stderr,"Incorrect output format %s\n", optarg);
-                    exit(EXIT_FAILURE);
+                    return NULL;
                 }
                 break;
             case 'v':
                 printf("%s\n", GCODE_VERSION); exit(0);
             default:
-                abort();
+                fprintf(stderr,"Unrecognized option %s\n", optarg);
+                return NULL;
         }
     }
+    return options;
 }

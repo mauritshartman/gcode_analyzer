@@ -23,10 +23,12 @@ typedef struct {
 
     float feedrate;
     Vector3D *offsets[2];       // TODO: max 2 extruders?
+    ubyte offsets_set;          // Number of offsets parsed from profile
 } gcode_options;
 
 
-void parse_options(gcode_options *, int argc, char *argv[]);
+/* Try to parse command line options and return in a gcode_options struct. If unable, return NULL */
+gcode_options *parse_options(int argc, char *argv[]);
 
 
 #ifdef  __cplusplus

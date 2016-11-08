@@ -13,7 +13,7 @@ extern "C" {
 #include <arguments.h>
 
 
-void show_output(Gcode *, gcode_options *);
+void show_output(Gcode *);
 
 
 #ifdef  __cplusplus

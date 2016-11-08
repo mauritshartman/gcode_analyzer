@@ -55,14 +55,14 @@ print_area *gcode_printing_area(Gcode *g)
 
 
 // Open the named file and set the file descriptor. Then determine file size.
-static void open_file_and_determine_size(Gcode *g, const char *filename)
+static void open_file_and_determine_size(Gcode *g)
 {
-    // Open the gcode file read-only:
-    g->file = fopen(filename, "r");
-    if (g->file == NULL) {
+    // Try to open the gcode file read-only:
+    if ((g->file = fopen(g->options->filename, "r")) == NULL) {
         fprintf(stderr,"fopen() failed in file %s at line # %d", __FILE__,__LINE__);
         exit(EXIT_FAILURE);
     }
+
     // Determine file size:
     fseek(g->file, 0L, SEEK_END);
     g->fileSize = ftell(g->file);
@@ -71,7 +71,7 @@ static void open_file_and_determine_size(Gcode *g, const char *filename)
 
 
 // Parse gcode comments (;) from a given line of gcode
-static void parse_gcode_comment(Gcode *g, const char *line)
+static void inline parse_gcode_comment(Gcode *g, const char *line)
 {
     char *comment;
     char *fil_token, *tok;
@@ -92,7 +92,7 @@ static void parse_gcode_comment(Gcode *g, const char *line)
 
 
 // Parse a single line of gcode:
-static void parse_line(Gcode *g, char *line)
+static void inline parse_line(Gcode *g, char *line)
 {
     char cmd_letter;
     int cmd_number, scanned;
@@ -109,28 +109,30 @@ static void parse_line(Gcode *g, char *line)
                 parse_M(g, cmd_number, line);
                 break;
             case 'T':
-                parse_T(g, cmd_number, line);
+                if (scanned == 2) { parse_T(g, cmd_number, line); }     // There should be a tool number
                 break;
                 /* Unclear whether comment lines need to start with a semicolon, or if whitespace is allowed first. If not, then the following is more efficient: */
             case ';':
                 parse_gcode_comment(g, line);
                 break;
-            default:
+            default:    // Silently ignore other gcode lines
                 break;
         }
     }
 }
 
 
-void gcode_load(Gcode *g, const char *filename)
+void gcode_load(Gcode *g)
 {
     char line[128];
-    memset (line, '\0', sizeof(line));
+    memset (line, '\0', sizeof(line));  // Probably not necessary as fgets overwrites this, including '\0'
 
-    open_file_and_determine_size(g, filename);
+    open_file_and_determine_size(g);
     
     // Parse all the lines in the gcode file:
     while (fgets(line, sizeof(line), g->file) != NULL) {
         parse_line(g, line);
     }
+
+    fclose(g->file);
 }
