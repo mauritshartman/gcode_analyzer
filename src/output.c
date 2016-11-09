@@ -13,16 +13,15 @@ static void output_json(Gcode *g) {
     ubyte i;
     print_area *pa;
 
-    t = 1000 * (g->parse_stop->tv_sec - g->parse_start->tv_sec) + (g->parse_stop->tv_usec - g->parse_start->tv_usec) / 1000;
-    printf("G-code file loaded (%ld Kbytes, %ld lines) in %.3f seconds (%.3f lines / second)\n",
-        g->fileSize / 1000, g->filePos, ((double)t / 1000.0), ((double)g->filePos / ((double)t / 1000.0)));
-
     output = json_object();
 
     // Basic file information:
     json_object_set(output, "file_name", json_string(g->options->filename));
     json_object_set(output, "file_size", json_integer(g->fileSize));
     json_object_set(output, "number_of_lines", json_integer(g->filePos));
+    t = 1000 * (g->parse_stop->tv_sec - g->parse_start->tv_sec) + (g->parse_stop->tv_usec - g->parse_start->tv_usec) / 1000;
+    json_object_set(output, "processing_time", json_real((double)t / 1000.0));
+    json_object_set(output, "lines_per_second", json_real((double)g->filePos / ((double)t / 1000.0)));
 
     // Relevant profile information:
     for (i = 0; i < g->options->offsets_set; i++) {
